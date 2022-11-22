@@ -21,3 +21,7 @@ print("W sumie kupuję ", x, "produktów.")
 
 for i in range (1,10):
     print(i, "Kocham Githuba :/ ")
+
+
+print("Zapraszam na kotlety. Rzucałem mięsem pół dnia !!!!!! ")
+print("Chcesz osiwieć? Ucz się gita.")
