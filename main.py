@@ -18,3 +18,6 @@ for k, v in slownik.items():
     x += len(v)
     
 print("W sumie kupuję ", x, "produktów.")
+
+for i in range (1,10):
+    print(i, "Kocham Githuba :/ ")
