@@ -2,63 +2,63 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG, filename="logfile_1.log")
 
-def dodawanie(skladnik_1, skladnik_2):
-    wynik = skladnik_1 + skladnik_2
-    return wynik
+def add(item_1, item_2):
+    result = item_1 + item_2
+    return result
     
 
-def odejmowanie(skladnik_1, skladnik_2):
-    wynik = skladnik_1 - skladnik_2
-    return wynik
+def sub(item_1, item_2):
+    result = item_1 - item_2
+    return result
     
 
 
-def mnozenie(skladnik_1, skladnik_2):
-    wynik = skladnik_1 * skladnik_2
-    return wynik
+def multi(item_1, item_2):
+    result = item_1 * item_2
+    return result
 
 
-def dzielenie(skladnik_1, skladnik_2):
-    wynik = skladnik_1 / skladnik_2
-    return wynik
+def div(item_1, item_2):
+    result = item_1 / item_2
+    return result
 
 
 if __name__ == "__main__":
-    choice = int(input("Podaj działanie, posługując się odpowiednią liczbą: 1 Dodawanie, 2 Odejmowanie, 3 Mnożenie, 4 Dzielenie:  "))
+    choice = int(input("Give the operation using the correct number: 1 Addition, 2 Subtraction, 3 Multiplication, 4 Division:  "))
 
-    skladnik_1 = float(input("Podaj pierwszy skladnik: "))
-    skladnik_2 = float(input("Podaj drugi skladnik: "))
+    item_1 = float(input("Enter the first item: "))
+    item_2 = float(input("Enter the second item: "))
 
 
     if choice == 1:
-        suma = dodawanie(skladnik_1, skladnik_2)
+        sum = add(item_1, item_2)
         
 
-        logging.debug("Dodaje %.2f i %.2f" % (skladnik_1, skladnik_2))
-        logging.debug("Suma wynosi %.2f" % suma)
+        logging.debug("Addition %.2f and %.2f" % (item_1, item_2))
+        logging.debug("The sum is: %.2f" % sum)
 
-        print("Suma wynosi: ", suma)
+        print("The sum is: ", sum)
 
     elif choice == 2:
-        roznica = odejmowanie(skladnik_1, skladnik_2)
+        diff = sub(item_1, item_2)
 
-        logging.debug("Odejmuje %.2f i %.2f" % (skladnik_1, skladnik_2))
-        logging.debug("Roznica wynosi %.2f" % roznica)
+        logging.debug("Subtraction %.2f and %.2f" % (item_1, item_2))
+        logging.debug("The difference is: %.2f" % diff)
 
-        print("Różnica wynosi: ", roznica)
+        print("he difference is: ", diff)
 
     elif choice == 3:
-        iloczyn = mnozenie(skladnik_1, skladnik_2)
+        ratio = multi(item_1, item_2)
 
-        logging.debug("Mnozy %.2f i %.2f" % (skladnik_1, skladnik_2))
-        logging.debug("Iloczyn wynosi %.2f" % iloczyn)
+        logging.debug("Multiplication %.2f and %.2f" % (item_1, item_2))
+        logging.debug("The ratio is: %.2f" % ratio)
 
-        print("Iloczyn wynosi: ", iloczyn)
+        print("The ratio is: ", ratio)
 
     elif choice == 4:
-        iloraz = dzielenie(skladnik_1, skladnik_2)
+        quotient = div(item_1, item_2)
 
-        logging.debug("Dzieli %.2f i %.2f" % (skladnik_1, skladnik_2))
-        logging.debug("Iloraz wynosi %.2f" % iloraz)
+        logging.debug("Division %.2f i %.2f" % (item_1, item_2))
+        logging.debug("The quotient is: %.2f" % quotient)
 
-        print("Iloraz wynosi: ", iloraz)
+        print("The quotient is: ", quotient)
