@@ -1,6 +1,6 @@
 # Program powinien poprawnie działać jeżeli przy pierwszym uruchomieniu programu pliki magazyn.csv i magazyn_sprzedaz.csv będą puste a w pliku zmienne.csv bedą dwie wartości 0
 
-from magazyn_funkcje import get_items, add_item, sell_item, lista_sprzedanych_towarów, get_value,  show_revenue, dostepne_towary
+from magazyn_funkcje import get_items, add_item, sell_item, lista_sprzedanych_towarów, get_value,  show_revenue, dostepne_towary, jaka_cena, wydruk_items, wydruk_sold_items
 from magazyn_funkcje import export_items_to_csv, export_sales_to_csv, load_items_from_csv, load_sold_items_from_csv, check_item,cena_itema_w_magazynie
 import csv
 
@@ -8,7 +8,7 @@ import csv
 
 def zapis_zmiennych():                  # funkcja zapisuje zmienne koszt_calkowity oraz zyski w pliku zmienne.csv
 
-    with open('zmienne.csv', 'w', newline='') as csvfile:
+    with open('zmienne.csv', 'w', newline='', encoding="utf-8") as csvfile:
         writer = csv.writer(csvfile, quoting=csv.QUOTE_MINIMAL)
 
         writer.writerow([koszt_calkowity])
@@ -16,7 +16,7 @@ def zapis_zmiennych():                  # funkcja zapisuje zmienne koszt_calkowi
 
 
 def odczyt_zmiennych():                  # funkcja wczytuje zmienne koszt_calkowity oraz zyski z pliku zmienne.csv
-    with open('zmienne.csv', newline='') as csvfile:
+    with open('zmienne.csv', newline='', encoding="utf-8") as csvfile:
         reader = csv.reader(csvfile)
 
         for row in reader:
@@ -55,7 +55,10 @@ while wybor != 9:
     print("7. Wczytuje stan magazynu z pliku magazyn.csv - opcja")
     print("8. Wczytuje sprzedane towary z pliku magazyn_sprzedaz.csv - opcja")
     print("9. Wyjście z programu ")
-    print("--------------------")
+    print("0. Wycena towarów")
+    print("Tymczasowo 77. Print listy items")
+    print("Tymczasowo 88. Print listy sold_items")
+    print("------------------")
     print()
 
 
@@ -90,15 +93,19 @@ while wybor != 9:
             
             item_quantity = int(item_quantity)
 
-            item_unit = input("Item unit of measure: (L, kg, pcs) ")
+            item_unit = input("Item unit of measure: (L, kg, pcs, bottle, box) ")
 
             while isinstance(item_price, int) == False  and isinstance(item_price, float) == False:   # item_price = string 
 
                 try:
                     item_price = input("Item price: ")
-                    item_price = float(item_price)
+                    if float(item_price) > 0.01:
+                        item_price = float(item_price)
+                    else:
+                        print("Cena zakupu musi być wyższa niż 0.01")
+
                 except:
-                    print("Podaj prawidłową liczbę. ")
+                    print("Podaj prawidłową liczbę, np: 5 lub 5.2 ")
 
 
 
@@ -118,12 +125,6 @@ while wybor != 9:
 
             item_unit = ''
             item_price = cena_itema_w_magazynie(item_name)
-            
-
-
-
-
-
 
         koszt_calkowity = koszt_calkowity + (item_quantity * item_price)
         add_item(item_name, item_quantity, item_unit, item_price)
@@ -136,10 +137,10 @@ while wybor != 9:
         zapis_zmiennych()
 
 
-
-
-
     elif wybor == 2:
+
+        cena_sprzedazy = ''
+        
         print("Wybrałeś sprzedaż z magazynu - Sell")
         print("Dostępne towary: ")
         dostepne_towary()           # wywołanie funkcji: dostepne_towary
@@ -148,7 +149,30 @@ while wybor != 9:
 
         sprzedana_ilosc = int(input("Ilość towaru na sprzedaż: "))
 
-        sell_item(nazwa_towaru, sprzedana_ilosc)
+
+
+
+
+        while isinstance(cena_sprzedazy, int) == False  and isinstance(cena_sprzedazy, float) == False:   
+
+                try:
+                    cena_sprzedazy = input("Podaj cenę sprzedaży: ")
+                    if float(cena_sprzedazy) > 0.01:
+                        cena_sprzedazy  = float(cena_sprzedazy)
+                    else:
+                        print("Cena sprzedaży musi być wyższa niż 0.01")
+
+                except:
+                    print("Podaj prawidłową liczbę, np: 10 lub 16.8 ")
+
+
+
+
+
+
+
+
+        sell_item(nazwa_towaru, sprzedana_ilosc, cena_sprzedazy)
         get_items()
         # zapis w obu plikach (magazyn.csv i magazyn_sprzedaż.csv)
         export_items_to_csv()
@@ -202,3 +226,15 @@ while wybor != 9:
 
     elif wybor == 9:
         print("Wybrałeś wyjście z programu. Bye bye. ")
+
+
+    elif wybor == 0:
+        print("Wyceń towary w magazynie.")
+        jaka_cena()
+
+    elif wybor == 77:
+        wydruk_items()
+
+    elif wybor == 88:
+        wydruk_sold_items()
+
