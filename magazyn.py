@@ -1,8 +1,10 @@
 # Program powinien poprawnie działać jeżeli przy pierwszym uruchomieniu programu pliki magazyn.csv i magazyn_sprzedaz.csv będą puste a w pliku zmienne.csv bedą dwie wartości 0
 
-from magazyn_funkcje import get_items, add_item, sell_item, lista_sprzedanych_towarów, get_value,  show_revenue, dostepne_towary, jaka_cena, wydruk_items, wydruk_sold_items
-from magazyn_funkcje import export_items_to_csv, export_sales_to_csv, load_items_from_csv, load_sold_items_from_csv, check_item,cena_itema_w_magazynie
+from magazyn_funkcje import get_items, add_item, sell_item, lista_sprzedanych_towarów,  show_revenue, dostepne_towary, jaka_cena_zakupu
+from magazyn_funkcje import export_items_to_csv, export_sales_to_csv, load_items_from_csv, load_sold_items_from_csv, check_item, cena_itema_w_magazynie
+from magazyn_funkcje import sprawdzam_cene_sprzedazy, ile_sztuk_w_magazynie, czy_towar_w_magazynie, dostepni_klienci, czy_klient_na_liscie
 import csv
+import time
 
 
 
@@ -29,7 +31,7 @@ zmienne = []
 
 odczyt_zmiennych()
 
-wybor = -1
+wybor = ''
 
 koszt_calkowity = zmienne[0]
 zyski = zmienne[1]
@@ -55,25 +57,60 @@ while wybor != 9:
     print("7. Wczytuje stan magazynu z pliku magazyn.csv - opcja")
     print("8. Wczytuje sprzedane towary z pliku magazyn_sprzedaz.csv - opcja")
     print("9. Wyjście z programu ")
-    print("0. Wycena towarów")
-    print("Tymczasowo 77. Print listy items")
-    print("Tymczasowo 88. Print listy sold_items")
+    print("0. Baza klientów")
     print("------------------")
     print()
 
 
-    wybor = int(input("Wybierz działanie (1 - 9):  "))
+
+    wybor = ''
+    while isinstance(wybor, int) == False:
+
+        try:
+            wybor = input("Wybierz działanie (0 - 9):  ")
+            if int(wybor) >= 0 and int(wybor) <= 9:
+                wybor = int(wybor)
+            else:
+                print("Wpisałeś liczbę całkowitą z poza zakresu 1 - 9")
+
+        except:
+            print("Wpisałeś bzdury")
+
+
 
     if wybor == 1:
-        item_name = ''
-        item_quantity = ''
+        item_name = '1'
         item_price = ''
+
         print("Wybrałeś dodanie towaru - add")
-        while len(item_name) < 3:
+
+
+        while item_name[0].isnumeric() == True or len(item_name) <= 3:
             
-            item_name = input("Item name: ")
-            if len(item_name) < 3:
-                print("Nazwa musi składać sie z conajmniej 3 liter.")
+            try:
+                item_name = input("Item name: ")
+                if len(item_name) == 0:
+                    item_name = '1'
+                    print("Zerowa dlugosc nazwy towaru. Czy nacisnąłeś Enter ?? Cwaniaczku")
+
+                elif len(item_name) <= 3:
+                    print("Nazwa towaru musi mieć co najmniej 4 znaki")
+
+                elif item_name[0].isnumeric() == True:
+                    print("Nazwa towaru nie może rozpoczynać się od cyfry. ")
+
+                elif len(item_name) == None:
+                    print("dlugosc nazwy towaru wynosi none") 
+                    
+                elif len(item_name) == True:
+                    print("True")
+                    
+                elif len(item_name) == False:
+                    print("False")
+
+
+            except:
+                print("kij ci w oko")        
             
 
 
@@ -84,16 +121,23 @@ while wybor != 9:
 
             # Tu pisać kod jeśli towaru nie ma w magazynie
 
-            while item_quantity.isnumeric() == False:
+            item_quantity = ''
 
+            while isinstance(item_quantity, int) == False:
                 try:
                     item_quantity = input("Item quantity: ")   # item_quantity = int(input("Item quantity: "))
+                    if int(item_quantity) > 0:
+                        item_quantity = int(item_quantity)
+                    else:
+                        print("Podaj dodatnią ilość sztuk np: 1, 20 lub 50")
+
                 except:
                     print("Podaj prawidłową liczbę. ")
             
-            item_quantity = int(item_quantity)
 
-            item_unit = input("Item unit of measure: (L, kg, pcs, bottle, box) ")
+            # można zrobić zeby długosc była przynajmniej 1 znak i ten znak nie może być cyfrą (tylko literą alfabetu)
+
+            item_unit = input("Item unit of measure: (L, unit, kg, pcs, bottle, box, jar etc ...) ")
 
             while isinstance(item_price, int) == False  and isinstance(item_price, float) == False:   # item_price = string 
 
@@ -103,9 +147,8 @@ while wybor != 9:
                         item_price = float(item_price)
                     else:
                         print("Cena zakupu musi być wyższa niż 0.01")
-
                 except:
-                    print("Podaj prawidłową liczbę, np: 5 lub 5.2 ")
+                    print("Podaj prawidłową liczbę, np: 5 lub 5.1 ")
 
 
 
@@ -113,15 +156,19 @@ while wybor != 9:
             print("Towar o tej nazwie jest już na stanie magazynowym")
 
             # Tu pisać kod jeśli towar jest w magazynie
+            item_quantity = ''
 
-            while item_quantity.isnumeric() == False:
-
+            while isinstance(item_quantity, int) == False:
                 try:
-                    item_quantity = input("Item quantity: ")   # item_quantity = int(input("Item quantity: "))
+                    item_quantity = input("Item quantity: ")  
+                    if int(item_quantity) > 0:
+                        item_quantity = int(item_quantity)
+                    else:
+                        print("Podaj dodatnią ilość sztuk np: 1, 20 lub 50")
                 except:
                     print("Podaj prawidłową liczbę. ")
             
-            item_quantity = int(item_quantity)
+       
 
             item_unit = ''
             item_price = cena_itema_w_magazynie(item_name)
@@ -137,33 +184,157 @@ while wybor != 9:
         zapis_zmiennych()
 
 
+
+
     elif wybor == 2:
 
-        cena_sprzedazy = ''
+        ncs = ''
+        zmiana_ceny = ''
+        sprzedana_ilosc = ''
+        nazwa_towaru = ''
+        nazwa_klienta = ''
         
         print("Wybrałeś sprzedaż z magazynu - Sell")
         print("Dostępne towary: ")
         dostepne_towary()           # wywołanie funkcji: dostepne_towary
 
-        nazwa_towaru = input("Podaj nazwe towaru na sprzedaż: ")
 
-        sprzedana_ilosc = int(input("Ilość towaru na sprzedaż: "))
+        while czy_towar_w_magazynie(nazwa_towaru) == False:
+
+            try:
+                nazwa_towaru = input("Podaj nazwe towaru na sprzedaż: ")
+                if czy_towar_w_magazynie(nazwa_towaru) == False:
+                    print("Tego towaru nie ma w magazynie. ")
+                elif czy_towar_w_magazynie(nazwa_towaru) == True:
+                    print()
+                    print("OK. Sprzedajemy :)) ")
+                    print()
+
+            except:
+                print("Tego towaru nie ma w magazynie.")
 
 
+        while isinstance(sprzedana_ilosc, int) == False:
+            try:
+                sprzedana_ilosc = input("Ilość towaru na sprzedaż: ")
+                if int(sprzedana_ilosc) > 0:
+                    sprzedana_ilosc = int(sprzedana_ilosc)
+                else:
+                    print("Podaj dodatnią ilość sztuk np: 1, 20 lub 50")
+            except:
+                print("Wpisz dodatnią liczbę np: 100")
 
 
+        # tu pisze kod który sprawdza czy w magazynie jest wystarczaja ca liczba sztuk na sprzedaż
 
-        while isinstance(cena_sprzedazy, int) == False  and isinstance(cena_sprzedazy, float) == False:   
+        while ile_sztuk_w_magazynie(nazwa_towaru) < sprzedana_ilosc:
+            print("Nie masz wystarczającej ilości towaru o nazwie: ", nazwa_towaru, " W magazynie pozostało ", ile_sztuk_w_magazynie(nazwa_towaru), " sztuk." )
 
+            sprzedana_ilosc = ''
+
+            while isinstance(sprzedana_ilosc, int) == False:
                 try:
-                    cena_sprzedazy = input("Podaj cenę sprzedaży: ")
-                    if float(cena_sprzedazy) > 0.01:
-                        cena_sprzedazy  = float(cena_sprzedazy)
+                    sprzedana_ilosc = input("Ile sztuk towaru %s chcesz sprzedać? " % nazwa_towaru)
+                    if int(sprzedana_ilosc) > 0:
+                        sprzedana_ilosc = int(sprzedana_ilosc)
                     else:
-                        print("Cena sprzedaży musi być wyższa niż 0.01")
-
+                        print("Podaj dodatnią ilość sztuk np: 1, 20 lub 50")
                 except:
-                    print("Podaj prawidłową liczbę, np: 10 lub 16.8 ")
+                    print("Wpisz dodatnią liczbę np: 100")
+
+        print("Poprzednia cena sprzedaży: ", sprawdzam_cene_sprzedazy(nazwa_towaru))          # drukuje cene sprzedazy jeśli była jz sprzedaż dla danego towaru
+
+        #print("Nowa cena sprzedaży wynosi: ", zmiana_ceny_sprzedazy(nazwa_towaru))
+
+        #ncs1 = zmiana_ceny_sprzedazy(nazwa_towaru)
+
+        while zmiana_ceny != 'y' and zmiana_ceny != 'n':
+            try:
+                zmiana_ceny = input("Czy chcesz ustalić / zmienić cenę sprzedaży? (y / n) ")
+
+                if zmiana_ceny == 'y':
+
+                        while isinstance(ncs, int) == False  and isinstance(ncs, float) == False:   # ncs = string 
+                            try:
+                                ncs = input("Podaj nową cenę sprzedaży: ")                          # ncs - nowa cena sprzedazy
+                                if float(ncs) > 0.01:
+                                    ncs = float(ncs)
+                                else:
+                                    print("Cena sprzedaży musi być większa niż zero")
+                            except:
+                                print("Podaj prawidłową liczbę, np: 5 lub 5.2 ")
+
+
+
+                        while jaka_cena_zakupu(nazwa_towaru) >= ncs:
+                            print("Cena sprzedaży nie może być mniejsza od ceny zakupu")
+                            print("Cena zakupu towaru o nazwie: ", nazwa_towaru, " wynosi ", jaka_cena_zakupu(nazwa_towaru), "wpisz wyższą cenę sprzedaży.")
+                            
+                            ncs = ''
+
+                            while isinstance(ncs, int) == False  and isinstance(ncs, float) == False:
+                                try:
+                                    ncs = input("Podaj nową cenę sprzedaży: ")
+                                    if float(ncs) > 0.01:
+                                        ncs = float(ncs)
+                                    else:
+                                        print("Cena sprzedaży musi być większa niż cena zakupu ...")
+                                except:
+                                    print("Podaj prawidłową liczbę, np: 5 lub 5.3 ")
+
+
+                elif zmiana_ceny == 'n':
+                        if sprawdzam_cene_sprzedazy(nazwa_towaru) == None:
+
+                            while isinstance(ncs, int) == False  and isinstance(ncs, float) == False:  
+                                try:
+                                    ncs = input("Podaj cenę sprzedaży: ")                         
+                                    if float(ncs) > 0.01:
+                                        ncs = float(ncs)
+                                    else:
+                                        print("Cena sprzedaży musi być większa niż zero")
+                                except:
+                                    print("Podaj prawidłową liczbę, np: 5 lub 5.4 ")
+
+
+                            while jaka_cena_zakupu(nazwa_towaru) >= ncs:
+                                print("Cena sprzedaży nie może być mniejsza od ceny zakupu")
+                                print("Cena zakupu towaru o nazwie: ", nazwa_towaru, " wynosi ", jaka_cena_zakupu(nazwa_towaru), "wpisz wyższą cenę sprzedaży.")
+
+                                ncs = ''
+
+                                while isinstance(ncs, int) == False  and isinstance(ncs, float) == False:
+                                    try:
+                                        ncs = input("Podaj cenę sprzedaży: ")
+                                        if float(ncs) > 0.01:
+                                            ncs = float(ncs)
+                                        else:
+                                            print("Cena sprzedaży musi być większa niż cena zakupu ...")
+                                    except:
+                                        print("Podaj prawidłową liczbę, np: 5 lub 5.5 ")
+                                
+
+
+                        elif sprawdzam_cene_sprzedazy(nazwa_towaru) != None:
+                            ncs = sprawdzam_cene_sprzedazy(nazwa_towaru)
+                        
+
+            except:
+                print("Wyberz y lub n")
+
+        dostepni_klienci()
+
+        while czy_klient_na_liscie(nazwa_klienta) == False:
+            try:
+                nazwa_klienta = input("Podaj nazwę klienta: ")
+                if czy_klient_na_liscie(nazwa_klienta) == False:
+                    print("Tego klienta nie ma na liście klientów!")
+                elif czy_klient_na_liscie(nazwa_klienta) == True:
+                    print()
+                    print("Towar sprzedany firmie: ", nazwa_klienta)
+                    print()
+            except:
+                print("Co Ty robisz ???")
 
 
 
@@ -171,8 +342,11 @@ while wybor != 9:
 
 
 
-
-        sell_item(nazwa_towaru, sprzedana_ilosc, cena_sprzedazy)
+        sell_item(nazwa_towaru, sprzedana_ilosc, ncs, nazwa_klienta)
+        print()
+        print("---------------------------------")
+        print("Stan magazynu:")
+        print()
         get_items()
         # zapis w obu plikach (magazyn.csv i magazyn_sprzedaż.csv)
         export_items_to_csv()
@@ -203,6 +377,8 @@ while wybor != 9:
         print()
         print("Zyski ze sprzedaży towarów: ", round(zyski, 2), " GBP")
         print()
+        print()
+        
 
     elif wybor == 6:
 
@@ -230,11 +406,4 @@ while wybor != 9:
 
     elif wybor == 0:
         print("Wyceń towary w magazynie.")
-        jaka_cena()
-
-    elif wybor == 77:
-        wydruk_items()
-
-    elif wybor == 88:
-        wydruk_sold_items()
-
+        

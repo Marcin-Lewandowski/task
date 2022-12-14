@@ -3,7 +3,7 @@ from datetime import date
 from datetime import datetime
 
 items = []
-
+klienci = []
 
 sold_items = []
 
@@ -22,20 +22,24 @@ def get_items():                        # funkcja wyświetla listę towarów w m
 
 def lista_sprzedanych_towarów():        # wyświetla listę sprzedanych towarów
 
-    print("Name\t\t\tQuantity\tUnit\tUnit Price (GBP)\tDate and time")
-    print("----\t\t\t--------\t----\t----------------\t------------------")
+    print("Name\t\t\tQuantity\tUnit\tUnit Price (GBP)\tDate and time\t\tKlient")
+    print("----\t\t\t--------\t----\t----------------\t------------------\t---------")
 
-    for x in sold_items:
-        print("%s\t\t\t%d\t\t%s\t%.2f\t\t\t%s"  % (x["name"], x["quantity"], x["unit"], x["unit_price"],x["date_and_time"]))
+    for x in sold_items: # x - jest słownikiem sprzedanego towaru
+        if len(x['name']) > 7:
+
+            print("%s\t\t%d\t\t%s\t%.2f\t\t\t%s\t%s"  % (x["name"], x["quantity"], x["unit"], x["unit_price"], x["date_and_time"], x['klient']))
+        else:
+            print("%s\t\t\t%d\t\t%s\t%.2f\t\t\t%s\t%s"  % (x["name"], x["quantity"], x["unit"], x["unit_price"], x["date_and_time"], x['klient']))
+
         
 
-def check_item(item_name):
+def check_item(item_name):          # funkcja sprawdza czy dany towar (item_name) istnieje w magazynie ( lista items)
     licznik = 0
     for slownik in items:
 
         if slownik['name'] == item_name:
             licznik = licznik + 1
-            #slownik['quantity'] = slownik['quantity'] + item_quantity
         else:
             pass
     return licznik
@@ -75,16 +79,21 @@ def add_item(item_name, item_quantity, item_unit, item_price):     # dodanie now
         "date_and_time": now.strftime("%d/%m/%Y    %H:%M")
         })
 
-def jaka_cena():
+def jaka_cena_zakupu(nazwa_towaru):
+
+    for slownik in items:
+        for k, v in slownik.items():
+            if v == nazwa_towaru:
+                return slownik['unit_price']
 
 
-    pass
 
-def sell_item(nazwa_towaru, sprzedana_ilosc, cena_sprzedazy):       # funkcja odejmuje ze stanu magazynowego towar np. milk w ilości określonej przez wprowadzoną liczbę
+   
+
+def sell_item(nazwa_towaru, sprzedana_ilosc, ncs, nazwa_klienta):       # funkcja odejmuje ze stanu magazynowego towar np. milk w ilości określonej przez wprowadzoną liczbę
     now = datetime.now()
 
     for slownik in items:
-
         for klucz, wartosc in slownik.items():
             if wartosc == nazwa_towaru:
                 if slownik["quantity"] >= sprzedana_ilosc:
@@ -98,11 +107,13 @@ def sell_item(nazwa_towaru, sprzedana_ilosc, cena_sprzedazy):       # funkcja od
                         "name": nazwa_towaru,
                         "quantity": sprzedana_ilosc,
                         "unit": slownik["unit"],       
-                        "unit_price": cena_sprzedazy,          # * slownik['cena_sprzedazy'] może trzeba bedzie podac cene sprzedazy jako argument funkcji
-                        "date_and_time": now.strftime("%d/%m/%Y    %H:%M")
+                        "unit_price": ncs,          # * slownik['cena_sprzedazy'] może trzeba bedzie podac cene sprzedazy jako argument funkcji
+                        "date_and_time": now.strftime("%d/%m/%Y    %H:%M"),
+                        "klient": nazwa_klienta
+
                     })
 
-                    print("Successfully sold %d %s of %s" % (sprzedana_ilosc, slownik["unit"], nazwa_towaru))
+                    print("Successfully sold %d %s of %s firmie %s" % (sprzedana_ilosc, slownik["unit"], nazwa_towaru, nazwa_klienta))
 
 
                 elif slownik["quantity"] < sprzedana_ilosc:
@@ -110,12 +121,14 @@ def sell_item(nazwa_towaru, sprzedana_ilosc, cena_sprzedazy):       # funkcja od
                 
                 
 
-def get_value():        # funkcja zlicza wartość przedmiotów aktualnie znajdujących się w magazynie - na liście items
-    
-    suma = 0
+def ile_sztuk_w_magazynie(nazwa_towaru):
+
     for slownik in items:
-        suma = suma + slownik["quantity"] * slownik["unit_price"]
-    return suma
+        for klucz, wartosc in slownik.items():
+            if wartosc == nazwa_towaru:
+                #print(slownik['quantity'])
+                return slownik['quantity']
+
     
     
 def show_revenue():  #  funkcja zlicza wartość sprzedanych przedmiotów z listy sold_items.
@@ -147,7 +160,7 @@ def export_sales_to_csv():          # funkcja eksportuje / zapisuje do pliku mag
 
     with open('magazyn_sprzedaz.csv', 'w', newline='', encoding="utf-8") as csvfile:
 
-        fieldnames = ['name', 'quantity', 'unit', 'unit_price', 'date_and_time']
+        fieldnames = ['name', 'quantity', 'unit', 'unit_price', 'date_and_time', 'klient']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
 
@@ -157,7 +170,8 @@ def export_sales_to_csv():          # funkcja eksportuje / zapisuje do pliku mag
                 'quantity': slownik['quantity'], 
                 'unit': slownik['unit'], 
                 'unit_price': slownik['unit_price'], 
-                'date_and_time': slownik['date_and_time']
+                'date_and_time': slownik['date_and_time'],
+                'klient': slownik['klient']
                 })
 
 
@@ -198,10 +212,24 @@ def load_sold_items_from_csv():
                 slownik1[klucz] = str(slownik1[klucz])
 
 
+
+def czy_towar_w_magazynie(nazwa_towaru):
+
+    towary_w_magazynie = []
+
+    for slownik in items:
+        towary_w_magazynie.append(slownik['name'])
+
+    if nazwa_towaru in towary_w_magazynie:
+        return True 
+
+    if nazwa_towaru not in towary_w_magazynie:
+        return False
+
+
 def dostepne_towary():
 
     dost_tow = []
-    
     for slownik in items:
 
         dost_tow.append({
@@ -215,13 +243,41 @@ def dostepne_towary():
         print("%d. %s  -->  %d sztuk"  % (lp, i["name"], i["quantity"]))
         lp = lp + 1
 
-def wydruk_items():
-    for i in items:
-        print(i)
 
+def sprawdzam_cene_sprzedazy(nazwa_towaru):
 
-def wydruk_sold_items():
-    for i in sold_items:
-        print(i)
-# funkcja wczytuje przy pomocy modułu csv.DictReader wczyta dane z pliku CSV i zastąpi nimi zawartość listy items. 
-# Wskazówka: użyj metody list.clear(), [items.clear() ] żeby wyczyścić listę items, przed załadowaniem danych.    
+    cena = 0
+    
+    for slownik in sold_items:
+        for k, v in slownik.items():
+            if v == nazwa_towaru:
+                cena = slownik['unit_price']
+   
+    if cena > 0:
+        return cena        
+    elif cena == 0:
+        return print("Nie było jeszcze sprzedaży tego towaru.")
+
+def dostepni_klienci():
+
+    klienci.clear()
+
+    with open('firmy.csv', newline='', encoding="utf-8") as csvfile:
+        reader = csv.reader(csvfile)
+
+        for row in reader:
+            rowek = row[0]
+            klienci.append(rowek)
+
+    licz = 1
+    for klient in klienci:
+
+        print("%d. %s  " % (licz, klient))
+        licz = licz + 1
+
+def czy_klient_na_liscie(nazwa_klienta):
+
+    if nazwa_klienta in klienci:
+        return True
+    elif nazwa_klienta not in klienci:
+        return False
