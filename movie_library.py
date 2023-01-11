@@ -42,9 +42,8 @@ class Series(Movies):
         return f"Series(title = {self.title} year = {self.year} genre = {self.genre} season_number = {self.season_number} episode_number = {self.episode_number}  impressions = {self.impressions})"
 
     def __str__(self) -> str:
-        return f'{self.title} {self.year} {self.genre} {self.season_number} {self.episode_number} {self.impressions} '
-
-
+        return("%s S%02dE%02s"  % (self.title, self.season_number, self.episode_number))
+        
 
 
 def times_10():         # uruchamia 10 razy funkcję generate_views
@@ -140,7 +139,7 @@ test_series = Series(title = 'McGywer', year = '1986', genre = 'akcja', impressi
 
 content = []
 content.append(Movies(title = 'Desperado',  year = '1995', genre = 'action', impressions = 0))
-content.append(Series(title = 'McGywer', year = '1986', genre = 'action', impressions = 0, season_number = '3', episode_number = '10'))
+content.append(Series(title = 'McGywer', year = '1986', genre = 'action', impressions = 0, season_number = 3, episode_number = 10))
 content.append(Movies(title = 'The Shawshank Redemption', year = '1994', genre = 'action', impressions = 0))   
 content.append(Movies(title = 'The Godfather', year = '1972', genre = 'action', impressions = 0))   
 content.append(Movies(title = 'The Dark Knight', year = '2008', genre = 'action', impressions = 0)) 
@@ -148,13 +147,14 @@ content.append(Movies(title = 'The Godfather Part II', year = '1974', genre = 'a
 content.append(Movies(title = 'Schindlers List', year = '1993', genre = 'action', impressions = 0)) 
 content.append(Movies(title = 'The Lord of the Rings: The Return of the King', year = '2003', genre = 'action', impressions = 0)) 
 content.append(Movies(title = 'Pulp Fiction', year = '1994', genre = 'action', impressions = 0)) 
-content.append(Series(title = 'Shooter', year = '2021', genre = 'action', impressions = 0, season_number = '3', episode_number = '5'))
-content.append(Series(title = 'Friends', year = '1990', genre = 'comedy', impressions = 0, season_number = '10', episode_number = '8'))
-content.append(Series(title = 'Suits', year = '2020', genre = 'Comedy drama', impressions = 0, season_number = '4', episode_number = '7'))
-content.append(Series(title = 'S.W.A.T.', year = '2002', genre = 'Black story', impressions = 0, season_number = '4', episode_number = '5'))
-content.append(Series(title = 'Narcos', year = '2018', genre = 'Drama', impressions = 0, season_number = '3', episode_number = '4'))
-content.append(Series(title = 'The Witcher', year = ' 2020', genre = 'Fantasy', impressions = 0, season_number = '2', episode_number = '12'))
-content.append(Series(title = 'El Chapo', year = '2016', genre = 'Thriller', impressions = 0, season_number = '3', episode_number = '10'))
+
+content.append(Series(title = 'Shooter', year = '2021', genre = 'action', impressions = 0, season_number = 3, episode_number = 5))
+content.append(Series(title = 'Friends', year = '1990', genre = 'comedy', impressions = 0, season_number = 10, episode_number = 8))
+content.append(Series(title = 'Suits', year = '2020', genre = 'Comedy drama', impressions = 0, season_number = 4, episode_number = 7))
+content.append(Series(title = 'S.W.A.T.', year = '2002', genre = 'Black story', impressions = 0, season_number = 4, episode_number = 5))
+content.append(Series(title = 'Narcos', year = '2018', genre = 'Drama', impressions = 0, season_number = 3, episode_number = 4))
+content.append(Series(title = 'The Witcher', year = ' 2020', genre = 'Fantasy', impressions = 0, season_number = 2, episode_number = 12))
+content.append(Series(title = 'El Chapo', year = '2016', genre = 'Thriller', impressions = 0, season_number = 3, episode_number = 10))
 
 
 # Wygeneruje odtworzenia treści za pomocą funkcji generate_views.
@@ -208,6 +208,17 @@ print()
 search('Desperado')
 search('O dwóch takich, co ukradli Księżyc')
 
+print()
+print()
+serie = Series(
+    title="The Simposons",
+    year=1990,
+    genre="Comedy",
+    impressions=0,
+    season_number=3,
+    episode_number=12)
+
+print(serie)
 
 
 '''
