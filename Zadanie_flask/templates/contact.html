@@ -1,0 +1,28 @@
+
+{% extends "parent.html" %}
+
+
+{% block content %} 
+<h2 class="first">Kontakt</h2>
+       
+
+<p><strong>Email:</strong> Marcin@malpiszon.pl</p>
+<p><strong>Telefon:</strong> 012-345-678</p>
+
+<p><strong>Pozostańmy w kontakcie.:</strong></p>
+
+
+
+<textarea name="message" form="usrform">Wpisz wiadomość</textarea>
+
+
+<form class="forma"  methods="POST">
+        
+
+
+    <input type="submit" value = "wysyłka" name = "wyslij">
+</form>
+
+
+
+{% endblock %}

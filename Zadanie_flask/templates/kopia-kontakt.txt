@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>My first website</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        {% extends "parent.html" %}
+        <h1 id="naglowek">Witaj na mojej stronie domowej.</h1> <br>
+
+        <a href="index.html">Home page</a>&nbsp;&nbsp;  <a href="kontakt.html">Kontakt</a><br><br>
+
+
+        <img src="https://scontent.flhr14-1.fna.fbcdn.net/v/t1.6435-9/43530751_2054718781215736_5149180276210925568_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=730e14&_nc_ohc=YhRIFK4Px08AX-Logd4&_nc_ht=scontent.flhr14-1.fna&oh=00_AfDd1gGGj2Z7-wzO6mZwc1M1kAxOkicaxT4VxFOUtlVmQg&oe=63EA5565" alt="marcin" title="marcin" width="600" height="300"><br><br>
+
+        <h2 class="first">Kontakt:</h2>
+
+
+<ul>
+	<li>email: email@costam.pl</li>
+	<li>telefon: 987654321</li>
+	
+</ul>
+
+    <p><strong>Wyślij wiadomość:</strong></p>
+
+
+
+    <textarea name="message" form="usrform">Wpisz wiadomość</textarea>
+    <form class="forma" action="/action_page.php" id="usrform">
+        
+        <input type="submit">
+      </form>
+      
+      
+
+    </body>
+</html>
